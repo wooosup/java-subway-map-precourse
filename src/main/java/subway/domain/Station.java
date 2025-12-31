@@ -1,10 +1,14 @@
 package subway.domain;
 
 public class Station {
-    private String name;
+    private final String name;
 
-    public Station(String name) {
+    private Station(String name) {
         this.name = name;
+    }
+
+    public static Station of(String name) {
+        return new Station(name);
     }
 
     public String getName() {
@@ -12,4 +16,9 @@ public class Station {
     }
 
     // 추가 기능 구현
+
+    @Override
+    public String toString() {
+        return "[INFO] " + name;
+    }
 }
