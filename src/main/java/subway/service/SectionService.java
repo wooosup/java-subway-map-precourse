@@ -18,8 +18,9 @@ public class SectionService {
     public void addSection(String lineName, String stationName, String order) {
         Line line = getLine(lineName);
         Station station = getStation(stationName);
+        int index = orderToIndex(order);
 
-        line.addStation(station, Integer.parseInt(order) - 1);
+        line.addStation(station, index);
     }
 
     public void delete(String lineName, String stationName) {
@@ -27,6 +28,14 @@ public class SectionService {
         Station station = getStation(stationName);
 
         line.removeStation(station);
+    }
+
+    private int orderToIndex(String order) {
+        try {
+            return Integer.parseInt(order) - 1;
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("[ERROR] 순서는 숫자여야 합니다.");
+        }
     }
 
     private Station getStation(String stationName) {

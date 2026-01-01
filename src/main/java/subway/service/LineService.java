@@ -18,6 +18,7 @@ public class LineService {
 
     public void addLine(String name, String firstStation, String lastStation) {
         validateDuplicate(name);
+        validateDifferentStation(firstStation, lastStation);
         Line line = Line.of(name);
 
         addLineOfStation(line, firstStation, lastStation);
@@ -26,29 +27,11 @@ public class LineService {
     }
 
     public void addLineOfStation(Line line, String firstStation, String lastStation) {
-        validateStation(firstStation, lastStation);
-
-        Station upStation = stationRepository.findByName(firstStation)
-                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 역입니다."));
-        Station downStation = stationRepository.findByName(lastStation)
-                .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 역입니다."));
-
-        validateNotNull(upStation, downStation);
+        Station upStation = getStation(firstStation);
+        Station downStation = getStation(lastStation);
 
         line.addStation(upStation);
         line.addStation(downStation);
-    }
-
-    private void validateNotNull(Station upStation, Station downStation) {
-        if (upStation == null || downStation == null) {
-            throw new IllegalArgumentException("등록되지 않은 역입니다. 역을 먼저 등록해주세요.");
-        }
-    }
-
-    private void validateStation(String firstStation, String lastStation) {
-        if (firstStation.equals(lastStation)) {
-            throw new IllegalArgumentException("상행 종점과 하행 종점은 같을 수 없습니다.");
-        }
     }
 
     public List<Line> findAll() {
@@ -56,9 +39,20 @@ public class LineService {
     }
 
     public void deleteLine(String name) {
-        validate(name);
+        validateLine(name);
 
         lineRepository.deleteLineByName(name);
+    }
+
+    private Station getStation(String firstStation) {
+        return stationRepository.findByName(firstStation)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 찾을 수 없는 역입니다."));
+    }
+
+    private void validateDifferentStation(String firstStation, String lastStation) {
+        if (firstStation.equals(lastStation)) {
+            throw new IllegalArgumentException("[ERROR] 상행 종점과 하행 종점은 같을 수 없습니다.");
+        }
     }
 
     private void validateDuplicate(String name) {
@@ -67,7 +61,7 @@ public class LineService {
         }
     }
 
-    private void validate(String name) {
+    private void validateLine(String name) {
         lineRepository.findByName(name)
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 찾을 수 없는 노선입니다."));
     }
