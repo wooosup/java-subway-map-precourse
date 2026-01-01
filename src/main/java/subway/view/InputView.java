@@ -51,6 +51,11 @@ public class InputView {
         return sc.nextLine();
     }
 
+    public String selectOrder() {
+        System.out.println("## 순서를 입력하세요.");
+        return sc.nextLine();
+    }
+
     public String deleteSectionsLine() {
         System.out.println("## 삭제할 구간의 노선을 입력하세요.");
         return sc.nextLine();

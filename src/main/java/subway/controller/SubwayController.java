@@ -3,6 +3,9 @@ package subway.controller;
 import java.util.List;
 import subway.domain.Line;
 import subway.domain.Station;
+import subway.service.LineService;
+import subway.service.SectionService;
+import subway.service.StationService;
 import subway.view.InputView;
 import subway.view.OutputView;
 
@@ -10,10 +13,17 @@ public class SubwayController {
 
     private final InputView inputView;
     private final OutputView outputView;
+    private final StationService stationService;
+    private final LineService lineService;
+    private final SectionService sectionService;
 
-    public SubwayController(InputView inputView, OutputView outputView) {
+    public SubwayController(InputView inputView, OutputView outputView, StationService stationService,
+                            LineService lineService, SectionService sectionService) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.stationService = stationService;
+        this.lineService = lineService;
+        this.sectionService = sectionService;
     }
 
     public void run() {
@@ -52,44 +62,67 @@ public class SubwayController {
     }
 
     public void runSubwayList() {
-//        List<Line> lines = lineService.findAll();
-//        outputView.subwayList(lines);
+        List<Line> lines = lineService.findAll();
+        outputView.subwayList(lines);
     }
 
     public void registerStation() {
         String name = inputView.inputStationName();
-//        stationService.addStation(name);
-//        outputView.printInfo("지하철 역이 등록되었습니다.");
+        stationService.addStation(name);
+        outputView.printInfo("지하철 역이 등록되었습니다.");
     }
 
     public void deleteStation() {
-        String name = inputView.inputStationName();
-//        stationService.deleteStation(name);
-//        outputView.printInfo("지하철 역이 삭제되었습니다.");
+        String name = inputView.deleteStation();
+        stationService.deleteStation(name);
+        outputView.printInfo("지하철 역이 삭제되었습니다.");
     }
 
     public void searchStations() {
-//        List<Station> stations = stationService.findAllStationNames();
-//        outputView.printStations(stations);
+        List<Station> stations = stationService.findAll();
+        outputView.printStations(stations);
     }
 
     // 1. 노선 관련 메서드
     public void registerLine() {
-        // 노선 등록 로직...
+        String name = inputView.addLine();
+        String firstStation = inputView.lineOfFirstStation();
+        String lastStation = inputView.lineOfLastStation();
+        lineService.addLine(name, firstStation, lastStation);
+
+        outputView.printInfo("지하철 노선이 등록되었습니다.");
     }
+
     public void deleteLine() {
-        // 노선 삭제 로직...
+        String name = inputView.deleteLine();
+        lineService.deleteLine(name);
+
+        outputView.printInfo("지하철 노선이 삭제되었습니다.");
     }
+
     public void searchLines() {
-        // 노선 조회 로직...
+        List<Line> lines = lineService.findAll();
+        outputView.printLines(lines);
     }
 
     // 2. 구간 관련 메서드
     public void registerSection() {
-        // 구간 등록 로직...
+        String line = inputView.selectLine();
+        String station = inputView.selectStation();
+        String order = inputView.selectOrder();
+
+        sectionService.addSection(line, station, order);
+
+        outputView.printInfo("구간이 등록되었습니다.");
     }
+
     public void deleteSection() {
-        // 구간 삭제 로직...
+        String line = inputView.deleteSectionsLine();
+        String station = inputView.deleteSectionsStation();
+
+        sectionService.delete(line, station);
+
+        outputView.printInfo("구간이 삭제되었습니다.");
     }
 
     public void goBack() {

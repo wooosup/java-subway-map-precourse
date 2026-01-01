@@ -8,18 +8,18 @@ import java.util.Optional;
 import subway.domain.Station;
 
 public class StationRepository {
-    private static final List<Station> stations = new ArrayList<>();
+    private final List<Station> stations = new ArrayList<>();
 
-    public static List<Station> stations() {
+    public List<Station> findAll() {
         return Collections.unmodifiableList(stations);
     }
 
-    public static void save(Station station) {
+    public void save(Station station) {
         stations.add(station);
     }
 
-    public static boolean deleteByName(String name) {
-        return stations.removeIf(station -> Objects.equals(station.getName(), name));
+    public void deleteByName(String name) {
+        stations.removeIf(station -> Objects.equals(station.getName(), name));
     }
 
     public Optional<Station> findByName(String name) {
@@ -27,4 +27,10 @@ public class StationRepository {
                 .filter(station -> station.getName().equals(name))
                 .findFirst();
     }
+
+    public boolean exists(String station) {
+        return stations.stream()
+                .anyMatch(s -> s.getName().equals(station));
+    }
+
 }

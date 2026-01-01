@@ -4,7 +4,14 @@ public class Station {
     private final String name;
 
     private Station(String name) {
+        validate(name);
         this.name = name;
+    }
+
+    private void validate(String name) {
+        if (name.length() < 2) {
+            throw new IllegalArgumentException("[ERROR] 2글자 이상이어야 합니다.");
+        }
     }
 
     public static Station of(String name) {

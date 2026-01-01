@@ -24,6 +24,22 @@ public class Line {
         stations.add(station);
     }
 
+    public void addStation(Station station, int order) {
+        validateDuplicate(station);
+
+        if (order < 0 || order > stations.size()) {
+            stations.add(station);
+            return;
+        }
+        stations.add(order, station);
+    }
+
+    private void validateDuplicate(Station station) {
+        if (stations.contains(station)) {
+            throw new IllegalArgumentException("[ERROR] 이미 노선에 등록된 역입니다.");
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -31,5 +47,9 @@ public class Line {
     @Override
     public String toString() {
         return "[INFO] " + name;
+    }
+
+    public void removeStation(Station station) {
+        stations.remove(station);
     }
 }

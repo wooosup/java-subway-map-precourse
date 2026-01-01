@@ -8,23 +8,28 @@ import java.util.Optional;
 import subway.domain.Line;
 
 public class LineRepository {
-    private static final List<Line> lines = new ArrayList<>();
+    private final List<Line> lines = new ArrayList<>();
 
-    public static List<Line> lines() {
+    public List<Line> findAll() {
         return Collections.unmodifiableList(lines);
     }
 
-    public static void save(Line line) {
+    public void save(Line line) {
         lines.add(line);
     }
 
-    public static boolean deleteLineByName(String name) {
-        return lines.removeIf(line -> Objects.equals(line.getName(), name));
+    public void deleteLineByName(String name) {
+        lines.removeIf(line -> Objects.equals(line.getName(), name));
     }
 
     public Optional<Line> findByName(String name) {
         return lines.stream()
                 .filter(line -> line.getName().equals(name))
                 .findFirst();
+    }
+
+    public boolean exists(String name) {
+        return lines.stream()
+                .anyMatch(line -> line.getName().equals(name));
     }
 }

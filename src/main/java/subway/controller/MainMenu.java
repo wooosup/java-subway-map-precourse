@@ -23,7 +23,7 @@ public enum MainMenu {
         Arrays.stream(values())
                 .filter(menu -> menu.command.equals(input))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 선택 할 수 없는 메뉴입니다."))
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 선택 할 수 없는 기능입니다."))
                 .action.accept(controller);
     }
 }
